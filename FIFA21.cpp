@@ -29,14 +29,17 @@ public:
     void display() {
         cout << setw(10) << left << Id;
         cout << setw(40) << left << PlayerName;
-        cout << setw(10) << left << Positions;
+        cout << setw(25) << left << Positions;
+        cout << left << average/Asize << " ";
         cout << endl;
     }
 
     int Id;
     string PlayerName;
     string Positions;
-    vector<float> ratings;
+   // vector<float> ratings;
+    float average=0;
+    int Asize=0;
     PlayerList *next;
 
 };
@@ -146,7 +149,7 @@ void open_players()
 
     for(int i=0;i<counter;i++)
     hash_table_insert(&players[i]);
-    print_table();
+   // print_table();
 
 }
 
@@ -165,7 +168,7 @@ void open_ratings()
         //StudentId, Last Name, playerName, Age, Phone Number, GPA
         int userID;
         int playerID;
-        float rating;
+        float rating=0;
         string tempString;
 
         getline(inputString, tempString, ',');
@@ -179,8 +182,9 @@ void open_ratings()
 
 
        // PlayerList student(playerID, playerName, lastName, NULL);
-       hash_table_search(playerID)->ratings.push_back(rating);
-      //  players.push_back(student);
+        hash_table_search(playerID)->average = hash_table_search(playerID)->average + rating;
+        hash_table_search(playerID)->Asize++;
+
         line = "";
      //   counter++;
     }
@@ -194,12 +198,13 @@ int main()
 {
 
     open_players();
+    open_ratings();
+
+    //print_table();
 
 
-    string stringTest("Python");
-
-    PlayerList *tmp1 = hash_table_search(226659);
-    PlayerList *tmp2 = hash_table_search(players[2713].Id);
+   /* PlayerList *tmp1 = hash_table_search(players[1].Id);
+    PlayerList *tmp2 = hash_table_search(players[2].Id);
 
     if(tmp1 == NULL){
         printf("Not found!\n");
@@ -210,7 +215,11 @@ int main()
         if(tmp2 == NULL){
         printf("Not found!\n");
     }else
-        tmp2->display();
+        tmp2->display();*/
+
+        for (auto players : players)
+            players.display();
+
 
     //displayStudents(players);
 }
