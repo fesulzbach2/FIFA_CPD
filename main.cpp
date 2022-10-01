@@ -52,6 +52,36 @@ void open_players()
     hash_table_insert_players(&players[i]);
 }
 
+void open_tags()
+{
+    ifstream inputFile;
+    inputFile.open("tags.csv");
+    string line = "";
+    int counter=0;
+
+    while (getline(inputFile, line)) {
+
+        stringstream inputString(line);
+
+        int userID;
+        int playerID;
+        string tag;
+        string tempString;
+
+        getline(inputString, tempString, ',');
+        userID = atoi(tempString.c_str());
+        getline(inputString, tempString, ',');
+        playerID = atoi(tempString.c_str());
+        getline(inputString,tag, '\n');
+
+
+        hash_table_search_players(playerID)->tags.push_back(tag);
+
+        line = "";
+    }
+}
+
+
 void open_ratings()
 {
     int i=0;
@@ -109,6 +139,24 @@ void open_ratings()
 }
 
 
+void search_position(int total, string position)
+{
+    int j=0,i=0;
+
+    while(j<total){
+        if (players2[i].Positions.find(position) != string::npos){
+            if(players2[i].Asize>=1){ // no lugar do 1 deveria ser 1000, só está assim pra poder funcionar com o "minirating"
+                players2[i].display();
+                j++;
+            }
+            i++;
+        } else
+        i++;
+
+    }
+
+}
+
 
 
 int main()
@@ -116,43 +164,29 @@ int main()
 
     open_players();
     open_ratings();
+    open_tags();
 
     for (auto players : players)
         players2.push_back(players);
 
     quickSort(players2, 0, players2.size());
 
-   /* string gk;
-    int num;
+    string gk = "ST";
+    int num=10;
 
-    cout<< "INSIRA O NUM DE JOGADORES: ";
-    cin>>num;
+    search_position(num,gk);
 
-    cout<< "INSIRA A POSICAO: ";
-    cin.ignore(1);
-    //cin>>gk;
-    getline(cin, gk, '\'');
-   // cout<< "sua string eh:" << gk;
 
-    int j=0;
 
-    for (int i=0;j<num;i++){
-        if (players2[i].Positions.find(gk) != string::npos){
-            players2[i].display();
-            j++;
-        }
-    }*/
+   /* for(int i=0;i<20;i++){
+        cout << "\n" << players[i].PlayerName << "\n" <<endl;
+        for(int j=0;j<players[i].tags.size();j++)
+            cout << players[i].tags[j] << ", ";}*/
+
+
 
 
 
    // print_table_players();
-   // print_table_users();
 
-
-       //for (auto players : players)
-     //  for(int i=0;i<18944;i++)
-          //  players2[i].display();
-
-
-    //displayStudents(players);
 }

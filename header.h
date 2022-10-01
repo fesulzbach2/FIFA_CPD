@@ -32,16 +32,17 @@ public:
         cout << setw(10) << left << Id;
         cout << setw(40) << left << PlayerName;
         cout << setw(25) << left << Positions;
-        cout << left << average/Asize << " ";
+        cout << setw(15) << left << average/Asize << " ";
+        cout << setw(25) << left << Asize;
         cout << endl;
     }
 
     int Id;
     string PlayerName;
     string Positions;
-   // vector<float> ratings;
     float average=0;
     int Asize=0;
+    vector<string> tags;
     PlayerList *next;
 
 };
@@ -83,5 +84,8 @@ void swapInt(int &value1, int &value2);
 void swapString(string &value1, string &value2);
 void swapDouble(float &value1, float &value2);
 
+////////////////////////////////////////////////////////// SEARCHES
+
+void search_position(int total, string position);
 
 #endif // HEADER_H_INCLUDED
