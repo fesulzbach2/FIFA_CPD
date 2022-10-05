@@ -8,13 +8,13 @@
 #include <cstring>
 #include "header.h"
 
-#define TABLE_SIZE 20000
+//#define TABLE_SIZE 20000
 
 using namespace std;
 
 PlayerList *hashTable_players[TABLE_SIZE];
 
-
+// Realiza o cálculo para estabelecer onde será salvo o jogador
 unsigned int hash_players(int id)
 {
     int hash_value=0;
@@ -24,6 +24,7 @@ unsigned int hash_players(int id)
     return hash_value;
 }
 
+//inicializa tabel hash
 void init_hashTable_players()
 {
     for(int i=0;i<TABLE_SIZE;i++){
@@ -32,6 +33,7 @@ void init_hashTable_players()
     }
 }
 
+//imprime tabela hash com os jogadores
 void print_table_players()
 {
     cout << "  START" << endl;
@@ -51,6 +53,7 @@ void print_table_players()
     cout << "  END\n" << endl;
 }
 
+// insere jogadores na tabela hash
 bool hash_table_insert_players(PlayerList *p)
 {
     if(p == NULL)
@@ -62,6 +65,7 @@ bool hash_table_insert_players(PlayerList *p)
     return true;
 }
 
+//busca jogadores na tabela hash, devolve o jogador encontrado
 PlayerList *hash_table_search_players(int number_id)
 {
     int index = hash_players(number_id);

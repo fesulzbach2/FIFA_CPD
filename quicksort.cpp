@@ -10,7 +10,7 @@
 
 using namespace std;
 
-
+// realiza o quicksort no vetor de jogadores utilizando a nota média como critério, de maneira decrescente
 void quickSort(vector<PlayerList> &set, float start, float end) {
    float pivotPoint;
    if (start < end) {
@@ -22,7 +22,7 @@ void quickSort(vector<PlayerList> &set, float start, float end) {
        quickSort(set, pivotPoint + 1, end);
    }
 }
-
+//particionamento (parte da quicksort)
 float partition(vector<PlayerList> &set, float start, float end) {
     float pivotValue, pivotIndex, mid;
 
@@ -56,16 +56,19 @@ float partition(vector<PlayerList> &set, float start, float end) {
     return pivotIndex;
 }
 
+//troca os valores inteiros da struct
 void swapInt(int &value1, int &value2) {
     int temp = value1;
     value1 = value2;
     value2 = temp;
 }
+//troca strings da struct
 void swapString(string &value1, string &value2) {
     string temp = value1;
     value1 = value2;
     value2 = temp;
 }
+//troca valores double da struct
 void swapDouble(float &value1, float &value2) {
     float temp = value1;
     value1 = value2;

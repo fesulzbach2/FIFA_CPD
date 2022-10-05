@@ -9,6 +9,7 @@
 #include <list>
 #include <cstring>
 
+#define R 256
 #define TABLE_SIZE 20000
 using namespace std;
 
@@ -29,8 +30,9 @@ public:
     }
 
     void display() {
-        cout << setw(10) << left << Id;
-        cout << setw(40) << left << PlayerName;
+        cout<<" ";
+        cout << setw(12) << left << Id;
+        cout << setw(45) << left << PlayerName;
         cout << setw(25) << left << Positions;
         cout << setw(15) << left << average/Asize << " ";
         cout << setw(25) << left << Asize;
@@ -47,18 +49,308 @@ public:
 
 };
 
-struct Avaliations
-{
-    int playerID;
-    float rating;
+struct Users {
+public:
+    Users(
+        int userid,
+        Users *next
+    ) {
+        userID = userid;
+    }
+
+    void display() {
+        cout<<" ";
+        cout << setw(12) << left << userID;
+        cout << endl;
+    }
+
+    int userID;
+    vector<int> playerIds;
+    vector<float> ratings;
+    Users *next;
+
 };
 
-struct Users
+
+/*struct Users
 {
     int userID;
-    vector<Avaliations> avaliation;
+    vector<int> playerIds;
+    vector<float> ratings;
     Users *next;
+};*/
+
+////////////////////////////////////////////////////////// ARVORE TRIE
+class Arvore_Trie
+{
+public:
+
+    class Node
+    {
+    public:
+        int val;
+        Node** next = new Node*[R];
+        bool isEnd;
+    };
+    Node* newNode()
+    {
+        Node* pNode= new Node;
+        pNode->isEnd = false;
+        for(size_t i = 0; i<R; i++)
+            pNode->next[i]=NULL;
+        return pNode;
+    }
+
+    Node root;
+
+    /*
+    int inTrie(string key)
+    {
+        Node* it = &root;
+
+        for(size_t i = 0; i<key.length(); i++)
+        {
+            int index = key[i];//-'a';
+            if(!it->next[index])
+                return 0;
+            it = it->next[index];
+        }
+        if(it->isEnd)
+            return 1;
+        else
+            return 0;
+    }*/
+
+    int getVal(string key)
+    {
+        Node* it = &root;
+
+        for(size_t i = 0; i<key.length(); i++)
+        {
+            int index = key[i];//-'a';
+            if(!it->next[index])
+                return NULL;
+            it = it->next[index];
+        }
+        if(it->isEnd)
+            return it->val;
+        else
+            return NULL;
+    }
+
+    /*
+    int search(int& valor, string key)
+    {
+        Node* it = &root;
+
+        for(size_t i = 0; i<key.length(); i++)
+        {
+            int index = key[i];//-'a';
+            if(!it->next[index])
+                return 1;
+            it = it->next[index];
+        }
+        if(it->isEnd)
+        {
+            valor = it->val;
+            return 0;
+        }
+        else
+            return 1;
+    }*/
+
+    Node* search(string key)
+    {
+        Node* it = &root;
+
+        for(size_t i = 0; i<key.length(); i++)
+        {
+            int index = key[i];//-'a';
+            if(!it->next[index])
+                return NULL;
+            it = it->next[index];
+        }
+        return it;
+    }
+
+    int iterate(Node* it, int* ids, int& qnt, int lim)
+    {
+        for(int i = 0 ; i<R; i++)
+        {
+            if(it->next[i] != NULL)
+            {
+                if(it->next[i]->isEnd)
+                {
+                    ids[qnt] = it->next[i]->val;
+                    qnt++;
+                }
+                if(qnt!=lim)
+                {
+                    qnt =  iterate(it->next[i], ids, qnt, lim);
+                }
+            }
+            if(qnt==lim)
+                break;
+
+        }
+        return qnt;
+    }
+
+    int searchPrefix(string prefix, int qnt, int* ids)
+    {
+        Node* it = search(prefix);
+        int found = 0;
+        iterate(it, ids, found, qnt);
+        return found;
+    }
+
+    void insert(string key, int valor)
+    {
+        Node* it = &root;
+        for(size_t i = 0; i<key.length(); i++)
+        {
+            int index = key[i];//-'.';
+            if(!it->next[index])
+            {
+                it->next[index] = newNode();
+            }
+            it = it->next[index];
+        }
+        it->isEnd = true;
+        it->val = valor;
+    }
+
+    Arvore_Trie()
+    {
+        this->root = *newNode();
+    }
 };
+
+////////////////////////////////////////////////////////// ARVORE TRIE POINTERS
+class Arvore_Trie_Ptr
+{
+public:
+
+    class Node
+    {
+    public:
+        void* val;
+        Node** next = new Node*[R];
+        bool isEnd;
+    };
+    Node* newNode()
+    {
+        Node* pNode= new Node;
+        pNode->isEnd = false;
+        for(size_t i = 0; i<R; i++)
+            pNode->next[i]=NULL;
+        return pNode;
+    }
+
+    Node root;
+
+    int inTrie(string key)
+    {
+        Node* it = &root;
+
+        for(size_t i = 0; i<key.length(); i++)
+        {
+            int index = key[i];//-'a';
+            if(!it->next[index])
+                return 0;
+            it = it->next[index];
+        }
+        if(it->isEnd)
+            return 1;
+        else
+            return 0;
+    }
+
+    void* getVal(string key)
+    {
+        Node* it = &root;
+
+        for(size_t i = 0; i<key.length(); i++)
+        {
+            int index = key[i];//-'a';
+            if(!it->next[index])
+                return NULL;
+            it = it->next[index];
+        }
+        if(it->isEnd)
+            return it->val;
+        else
+            return NULL;
+    }
+
+    Node* search(string key)
+    {
+        Node* it = &root;
+
+        for(size_t i = 0; i<key.length(); i++)
+        {
+            int index = key[i];//-'a';
+            if(!it->next[index])
+                return NULL;
+            it = it->next[index];
+        }
+        return it;
+    }
+
+    int iterate(Node* it, void** ids, int& qnt, int lim)
+    {
+        for(int i = 0 ; i<R; i++)
+        {
+            if(it->next[i] != NULL)
+            {
+                if(it->next[i]->isEnd)
+                {
+                    ids[qnt] = it->next[i]->val;
+                    qnt++;
+                }
+                if(qnt!=lim)
+                {
+                    qnt =  iterate(it->next[i], ids, qnt, lim);
+                }
+            }
+            if(qnt==lim)
+                break;
+
+        }
+        return qnt;
+    }
+
+    int searchPrefix(string prefix, int qnt, void** ids)
+    {
+        Node* it = search(prefix);
+        int found = 0;
+        iterate(it, ids, found, qnt);
+        return found;
+    }
+
+    void insert(string key, void* valor)
+    {
+        Node* it = &root;
+        for(size_t i = 0; i<key.length(); i++)
+        {
+            int index = key[i];//-'.';
+            if(!it->next[index])
+            {
+                it->next[index] = newNode();
+            }
+            it = it->next[index];
+        }
+        it->isEnd = true;
+        it->val = valor;
+    }
+
+    Arvore_Trie_Ptr()
+    {
+        this->root = *newNode();
+    }
+};
+
+
 
 ////////////////////////////////////////////////////////// HASHTABLE PLAYERS
 
